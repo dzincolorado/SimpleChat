@@ -1,53 +1,38 @@
-var net = require("net")
-var chatServer = net.createServer();
-var clientList = [];
+var express = require("express");
 
-chatServer.on("connection", function(client){
-	client.name = client.remoteAddress + ":" + client.remotePort;
-	client.write("Hi " + client.name + "\n");
-	clientList.push(client);
-	
-	client.on("data", function(data){
-		broadcast(data, client);
-	});
-	
-	client.on('end', function(){
-		console.log("Disconnecting: " + client.name);
-		clientList.splice(clientList.indexOf(client), 1);
-	});
-	
-	client.on('error', function(e){
-		console.log(e);
-	})
-	
-	//client.end();
-});
+var expressServer = express.createServer();
+expressServer.listen(8000);
 
-function broadcast(message, client)
-{
-	var cleanup = [];
-	for(x=0;x<clientList.length;x++)
+console.log("Listenging on: " + expressServer.address().port);
+
+expressServer.set("views", __dirname + "/views");
+expressServer.set("view engine", "jade");
+expressServer.set("view options", {layout:false});
+
+expressServer.use(express.bodyParser());
+expressServer.use(express.static(__dirname + "/assets"));
+
+var tweets = [];
+
+//TODO: abstract verbs to respective request handlers
+
+expressServer.get("/", function(request, response){
+	//response.send("Welcome to my simple Node Twitter");
+	response.render("index", {title: "The Tweets", header: "Tweets"});
+})
+
+expressServer.post("/send", function(request, response){
+	if(request.body && request.body.tweet)
 	{
-		if(clientList[x] != client)
-		{
-			if(clientList[x].writable)
-			{
-				clientList[x].write(client.name + " says " + message);
-			}
-			else
-			{
-				cleanup.push(clientList[x]);
-				clientList[x].destroy();
-			}
-		}
+		tweets.push(request.body.tweet);
+		response.send({"status":"ok", "message":"Tweet Received!"});
 	}
-	
-	for(x=0;x<cleanup.length;x++)
+	else
 	{
-		clientList.splice(clientList.indexOf(cleanup[x]), 1);
+		response.send({"status":"nok", "message":"No Tweet received. :("});
 	}
-}
+})
 
-chatServer.listen(9000);
-
-console.log("chatServer is listening on port: " + chatServer.address().port);
+expressServer.get("/tweets", function(request, response){
+	response.send(tweets);
+})

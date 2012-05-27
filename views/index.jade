@@ -1,3 +1,12 @@
 extends layout
 
 block content
+	form(action='/send', method='POST')
+		input(type='text', length='140', name='tweet')
+		input(type='submit', value='Tweet')
+	br
+	
+	ul
+		each t in tweets
+			li= t.value	
+	/ !=partial('partials/chirp', {locals: {tweets: tweets}})

@@ -18,14 +18,33 @@ var tweets = [];
 
 expressServer.get("/", function(request, response){
 	//response.send("Welcome to my simple Node Twitter");
-	response.render("index", {title: "The Tweets", header: "Tweets"});
+	console.log(tweets);
+	response.render("index", {
+		locals: 
+			{
+				'title': "The Tweets", 
+				'header': "Welcome to Les Tweets!",
+				'tweets': tweets
+			}
+		});
 })
+
+function chirp(tweet){
+	this.value = tweet;
+}
 
 expressServer.post("/send", function(request, response){
 	if(request.body && request.body.tweet)
 	{
-		tweets.push(request.body.tweet);
-		response.send({"status":"ok", "message":"Tweet Received!"});
+		tweets.push(new chirp(request.body.tweet));
+		console.log('tweet:' + request.body.tweet);
+		console.log('accepts: ' + request.headers['accept']);
+		if(acceptsHtml(request.headers['accept'])){
+			response.redirect('/', 302);
+		}
+		else{
+			response.send({"status":"ok", "message":"Tweet Received!"});
+		}
 	}
 	else
 	{
@@ -36,3 +55,10 @@ expressServer.post("/send", function(request, response){
 expressServer.get("/tweets", function(request, response){
 	response.send(tweets);
 })
+
+function acceptsHtml(header){
+	var accepts = header.split(',');
+	for(i=0;i<accepts.length;i++){
+		if(accepts[i] === 'text/html') {return true;}
+	}
+}

@@ -1,12 +1,12 @@
-var tweetStorage = require("../dataAccess/tweet");
 var chirpHelper = require("../helpers/chirp");
 var httpHelper = require("../helpers/http");
+var db = require('mongojs').connect('chatServer', ['tweets']);
 
 function newTweet(request, response){
 	if(request.body && request.body.tweet)
 	{
 		
-		tweetStorage.persistTweet(new chirpHelper.chirp(request.body.tweet));
+		db.tweets.save(new chirpHelper.chirp(request.body.tweet));
 
 		console.log('tweet:' + request.body.tweet);
 		console.log('accepts: ' + request.headers['accept']);
@@ -24,27 +24,34 @@ function newTweet(request, response){
 }
 
 function getTweets(request, response){
-	response.send(tweetStorage.getTweets());
+	
+	db.tweets.find(function(err, docs){
+		logToConsole(docs);
+		
+		response.send(docs);
+	});
 }
 
 function index(request, response){
 	
-	var tweets = tweetStorage.getTweets();
-	console.log(tweets);
-	/*
-	if(tweets.length == 0){
-		tweets.push(new chirpHelper.chirp("test"));
-	}
-	*/
-	
-	response.render("index", {
+	db.tweets.find(function(err, docs){
+		logToConsole(docs);
+		
+		response.render("index", {
 		locals: 
 			{
 				'title': "The Tweets", 
 				'header': "Welcome to Les Tweets!",
-				'tweets': (typeof tweets != "undefined") ? tweets : null
+				'tweets': (typeof docs != "undefined") ? docs : null
 			}
 		});
+	});
+}
+
+function logToConsole(docs){
+	if(docs != null && docs.length > 0){
+		console.log(docs[0]);	
+	}
 }
 
 exports.newTweet = newTweet;

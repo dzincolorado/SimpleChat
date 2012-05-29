@@ -1,11 +1,17 @@
 var chirpHelper = require("../helpers/chirp");
 var httpHelper = require("../helpers/http");
+var loggingHelper = require("../helpers/logging");
+var tweetValidator = require("../validators/tweet");
 var db = require('mongojs').connect('chatServer', ['tweets']);
 
 function newTweet(request, response){
 	if(request.body && request.body.tweet)
 	{
-		
+		//TODO:  need better validation handling and messaging
+		if(!tweetValidator.validate(request.body.tweet)){
+			response.send({"status":"nok", "message":"Tweet must be at least 1 character long."});
+			response.end();
+		}
 		db.tweets.save(new chirpHelper.chirp(request.body.tweet));
 
 		console.log('tweet:' + request.body.tweet);
@@ -26,7 +32,7 @@ function newTweet(request, response){
 function getTweets(request, response){
 	
 	db.tweets.find(function(err, docs){
-		logToConsole(docs);
+		loggingHelper.logToConsole(docs);
 		
 		response.send(docs);
 	});
@@ -35,7 +41,7 @@ function getTweets(request, response){
 function index(request, response){
 	
 	db.tweets.find(function(err, docs){
-		logToConsole(docs);
+		loggingHelper.logToConsole(docs);
 		
 		response.render("index", {
 		locals: 
@@ -46,12 +52,6 @@ function index(request, response){
 			}
 		});
 	});
-}
-
-function logToConsole(docs){
-	if(docs != null && docs.length > 0){
-		console.log(docs[0]);	
-	}
 }
 
 exports.newTweet = newTweet;

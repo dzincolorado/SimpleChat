@@ -12,7 +12,7 @@ block content
 			each t in tweets
 				li 
 					span(class="label label-info")= t.value
-						em= ' posted on ' + t.createDate.toLocaleDateString()
+						em= ' posted on ' + t.createDate.toLocaleDateString() + ' ' + t.createDate.toLocaleTimeString()
 	- else
 		div(class='alert alert-info') We are tweetless.
 	// !=partial('partials/chirp', {locals: {tweets: tweets}})

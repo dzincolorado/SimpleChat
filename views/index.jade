@@ -1,15 +1,18 @@
 extends layout
 
 block content
-	form(action='/send', method='POST')
-		input(type='text', length='140', name='tweet')
-		input(type='submit', value='Tweet')
-	br
+	form(action='/send', method='POST', class='well')
+		label Tweet: 
+		input(type='text', length='140', name='tweet', class='span3', placeholder='Type something...')
+		span(class='help-block') 140 characters or less
+		input(type='submit', value='Tweet it!', class='btn')
 	
 	-	if(tweets != null)
 		ul
 			each t in tweets
-				li= t.value + ' posted on ' + t.createDate
+				li 
+					span(class="label label-info")= t.value
+						em= ' posted on ' + t.createDate.toLocaleDateString()
 	- else
 		div(class='alert alert-info') We are tweetless.
 	// !=partial('partials/chirp', {locals: {tweets: tweets}})

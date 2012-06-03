@@ -14,17 +14,29 @@ function newTweet(request, response){
 			response.end();
 		}
 		
-		//redis rpush onto list
-		redisClient.rpush("tweets", chirpHelper.chirp(request.body.tweet), function(err, res){});
-
 		console.log('tweet:' + request.body.tweet);
-		console.log('accepts: ' + request.headers['accept']);
-		if(httpHelper.acceptsHtml(request.headers['accept'])){
-			response.redirect('/', 302);
-		}
-		else{
-			response.send({"status":"ok", "message":"Tweet Received!"});
-		}
+		var newChirp = new chirpHelper.chirp(request.body.tweet);
+		console.log('tweet:' + JSON.stringify(newChirp));
+		
+		//TODO: try use nextid
+	
+		/*
+		redisClient.incr("nextid", function(err, id){
+			
+		});
+		*/
+		
+		//redis rpush onto list
+		redisClient.rpush("tweets", JSON.stringify(newChirp), function(){
+			console.log('accepts: ' + request.headers['accept']);
+			if(httpHelper.acceptsHtml(request.headers['accept'])){
+				response.redirect('/', 302);
+			}
+			else{
+				response.send({"status":"ok", "message":"Tweet Received!"});
+			}			
+		});
+
 	}
 	else
 	{
@@ -35,23 +47,36 @@ function newTweet(request, response){
 function getTweets(request, response){
 	
 	redisClient.lrange("tweets", 0, 100, function(err, docs){
-		loggingHelper.logToConsole(docs);
-		
-		response.send(docs);
+		if(docs != null){
+			loggingHelper.logToConsole(docs);
+			response.send(JSON.parse(docs));	
+		}
 	});
 }
 
 function index(request, response){
 	
 	redisClient.lrange("tweets", 0, 100, function(err, docs){
-		loggingHelper.logToConsole(docs);
+
+		if(docs != null && docs.length > 0)
+		{
+			loggingHelper.logToConsole(docs);
+		}
+		
+		var items = [];
+		var jsonDoc = null;
+		docs.forEach(function(doc){
+			jsonDoc = JSON.parse(doc);
+			loggingHelper.logToConsole(jsonDoc.content);
+			items.push(new chirpHelper.chirp(jsonDoc.content, jsonDoc.createDate));
+		});
 		
 		response.render("index", {
 		locals: 
 			{
 				'title': "The Tweets", 
 				'header': "Welcome to Les Tweets!",
-				'tweets': (typeof docs != "undefined") ? docs : null
+				'tweets': (typeof docs != "undefined" && docs != null && docs.length > 0) ? items : null
 			}
 		});
 	});

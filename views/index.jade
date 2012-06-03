@@ -11,7 +11,7 @@ block content
 		ul
 			each t in tweets
 				li 
-					span(class="label label-info")= t.value
+					span(class="label label-info")= t.content
 						em= ' posted on ' + t.createDate.toLocaleDateString() + ' ' + t.createDate.toLocaleTimeString()
 	- else
 		div(class='alert alert-info') We are tweetless.

@@ -1,6 +1,9 @@
+var util = require("util");
+
 function logToConsole(docs){
-	if(docs != null && docs.length > 0){
-		console.log(docs[0]);	
+	console.log(typeof docs);
+	if(docs != null){
+		console.log(util.inspect(docs));	
 	}
 }
 

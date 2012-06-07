@@ -70,7 +70,7 @@ function parseTweets(err, docs)
 //TODO: need to implement
 function consumeTweets(request, response){
 	//http://search.twitter.com/search.json?q=LuckyPiePizza
-	//avengers
+	//#avengers
 	//http://api.twitter.com/1/trends/daily.json
 	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
 }

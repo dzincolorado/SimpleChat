@@ -1,10 +1,10 @@
 var util = require("util");
 
-function logToConsole(docs){
-	console.log(typeof docs);
-	if(docs != null){
-		console.log(util.inspect(docs));	
+function log(item){
+	//console.log(typeof item);
+	if(item != null){
+		console.log(util.inspect(item));	
 	}
 }
 
-exports.logToConsole = logToConsole;
+exports.log = log;

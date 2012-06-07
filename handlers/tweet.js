@@ -14,9 +14,9 @@ function newTweet(request, response){
 			response.end();
 		}
 		
-		console.log('tweet:' + request.body.tweet);
+		loggingHelper.log('tweet:' + request.body.tweet);
 		var newChirp = new chirpHelper.chirp(request.body.tweet);
-		console.log('tweet:' + JSON.stringify(newChirp));
+		loggingHelper.log('tweet:' + JSON.stringify(newChirp));
 		
 		//TODO: try use nextid
 	
@@ -28,7 +28,7 @@ function newTweet(request, response){
 		
 		//redis rpush onto list
 		redisClient.rpush("tweets", JSON.stringify(newChirp), function(){
-			console.log('accepts: ' + request.headers['accept']);
+			loggingHelper.log('accepts: ' + request.headers['accept']);
 			if(httpHelper.acceptsHtml(request.headers['accept'])){
 				response.redirect('/', 302);
 			}
@@ -47,36 +47,50 @@ function newTweet(request, response){
 function getTweets(request, response){
 	
 	redisClient.lrange("tweets", 0, 100, function(err, docs){
-		if(docs != null){
-			loggingHelper.logToConsole(docs);
-			response.send(JSON.parse(docs));	
-		}
+		response.send(parseTweets(err, docs));
 	});
+}
+
+function parseTweets(err, docs)
+{
+	var items = [];
+	if(docs != null){
+		loggingHelper.log(docs);
+		
+		var jsonDoc = null;
+		docs.forEach(function(doc){
+			jsonDoc = JSON.parse(doc);
+			loggingHelper.log(jsonDoc.content);
+			items.push(new chirpHelper.chirp(jsonDoc.content, jsonDoc.createDate));
+		});
+		
+		//TODO: use Jquery's $.map
+		//var mappedTweets = $.map(docs, function(doc){return new chirpHelper.chirp(item);});
+	}
+	
+	return items;
+}
+
+//TODO: need to implement
+function consumeTweets(request, response){
+	//http://search.twitter.com/search.json?q=LuckyPiePizza
+	//avengers
+	//http://api.twitter.com/1/trends/daily.json
+	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
 }
 
 function index(request, response){
 	
 	redisClient.lrange("tweets", 0, 100, function(err, docs){
-
-		if(docs != null && docs.length > 0)
-		{
-			loggingHelper.logToConsole(docs);
-		}
-		
 		var items = [];
-		var jsonDoc = null;
-		docs.forEach(function(doc){
-			jsonDoc = JSON.parse(doc);
-			loggingHelper.logToConsole(jsonDoc.content);
-			items.push(new chirpHelper.chirp(jsonDoc.content, jsonDoc.createDate));
-		});
+		items = parseTweets(err, docs);
 		
 		response.render("index", {
 		locals: 
 			{
 				'title': "The Tweets", 
 				'header': "Welcome to Les Tweets!",
-				'tweets': (typeof docs != "undefined" && docs != null && docs.length > 0) ? items : null
+				'tweets': (typeof items != "undefined" && items != null && items.length > 0) ? items : null
 			}
 		});
 	});

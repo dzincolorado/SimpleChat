@@ -1,10 +1,11 @@
 var tweetHandler = require("./handlers/tweet");
+var loggingHelper = require("./helpers/logging");
 var express = require("express");
 
 var expressServer = express.createServer();
 expressServer.listen(8000);
 
-console.log("Listening on: " + expressServer.address().port);
+loggingHelper.log("Listening on: " + expressServer.address().port);
 
 expressServer.set("views", __dirname + "/views");
 expressServer.set("view engine", "jade");

@@ -22,7 +22,6 @@ function newTweet(request, response){
 	
 		/*
 		redisClient.incr("nextid", function(err, id){
-			
 		});
 		*/
 		

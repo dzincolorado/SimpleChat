@@ -81,6 +81,27 @@ function index(request, response){
 		var items = [];
 		items = parseTweets(err, docs);
 		
+		//TODO: use Jquery's $.map
+		//var mappedTweets = $.map(docs, function(doc){return new chirpHelper.chirp(item);});
+	}
+	
+	return items;
+}
+
+//TODO: need to implement
+function consumeTweets(request, response){
+	//http://search.twitter.com/search.json?q=LuckyPiePizza
+	//avengers
+	//http://api.twitter.com/1/trends/daily.json
+	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
+}
+
+function index(request, response){
+	
+	redisClient.lrange("tweets", 0, 100, function(err, docs){
+		var items = [];
+		items = parseTweets(err, docs);
+		
 		response.render("index", {
 		locals: 
 			{

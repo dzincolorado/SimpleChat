@@ -1,0 +1,10 @@
+{
+	"name": "Having fun with Node, building a simple Twitter based app",
+	"version": "0.0.1",
+	"dependencies": {
+		"express": ">= 2.5.10",
+		"passport": ">= 0.0.0",
+		"passport-twitter": ">= 0.0.0",
+		"redis": ">= 0.7.2"
+	}
+}

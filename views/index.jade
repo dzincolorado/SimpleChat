@@ -1,30 +1,24 @@
 extends layout
 
-block content
-	- if(!everyauth.loggedIn)
-		#twitter-login
-		a(href='/auth/twitter', style='border: 0px') 
-			img(src='/images/sign-in-with-twitter_0.png', width="225px", height="16px")
-		
-	- else
-		h3 Twitter User Data
-		br
-		a(href="/logout") Logout
-		p= JSON.stringify(everyauth.twitter.user)
-		br
-		br
-		form(action='/send', method='POST', class='well')
-			label Tweet: 
-			input(type='text', length='140', name='tweet', class='span3', placeholder='Type something...')
-			span(class='help-block') 140 characters or less
-			input(type='submit', value='Tweet it!', class='btn')
-		
-			- if(tweets != null)
-				ul
-					each t in tweets
-						li 
-							span(class="label label-info")= t.content
-								em= ' posted on ' + t.createDate.toLocaleDateString() + ' ' + t.createDate.toLocaleTimeString()
-			- else
-				div(class='alert alert-info') We are tweetless.
-				// !=partial('partials/chirp', {locals: {tweets: tweets}})
+block content		
+	h3 Twitter User Data
+	br
+	a(href="/logout") Logout
+	p= user.username
+	br
+	br
+	form(action='/send', method='POST', class='well')
+		label Tweet: 
+		input(type='text', length='140', name='tweet', class='span3', placeholder='Type something...')
+		span(class='help-block') 140 characters or less
+		input(type='submit', value='Tweet it!', class='btn')
+	
+		- if(tweets != null)
+			ul
+				each t in tweets
+					li 
+						span(class="label label-info")= t.content
+							em= ' posted on ' + t.createDate.toLocaleDateString() + ' ' + t.createDate.toLocaleTimeString()
+		- else
+			div(class='alert alert-info') We are tweetless.
+			// !=partial('partials/chirp', {locals: {tweets: tweets}})

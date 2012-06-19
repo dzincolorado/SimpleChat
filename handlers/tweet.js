@@ -89,13 +89,27 @@ function index(request, response){
 	response.render("index", {
 		locals: 
 			{
-				'title': "The Tweets - loggined in: " + request.loggedIn, 
-				'header': "Welcome to Les Tweets!",
-				'tweets': (items != null && items.length > 0) ? items : null
+				'title': "Los Tweets", 
+				'header': "Welcome to Los Tweets!",
+				'tweets': (items != null && items.length > 0) ? items : null,
+				'user': request.user
 			}
 		});
+}
+
+function login(request, response)
+{
+	response.render("login", {
+		locals:
+		{
+			'title': "Login into Los Tweets",
+			'header': "Login into Los Tweets",
+			'user': request.user
+		}
+	})
 }
 
 exports.newTweet = newTweet;
 exports.getTweets = getTweets;
 exports.index = index;
+exports.login = login;

@@ -22,6 +22,7 @@ function newTweet(request, response){
 	
 		/*
 		redisClient.incr("nextid", function(err, id){
+			
 		});
 		*/
 		
@@ -62,27 +63,7 @@ function parseTweets(err, docs)
 			loggingHelper.log(jsonDoc.content);
 			items.push(new chirpHelper.chirp(jsonDoc.content, jsonDoc.createDate));
 		});
-	}
-	
-	return items;
-}
-
-//TODO: need to implement
-function consumeTweets(request, response){
-	//http://search.twitter.com/search.json?q=LuckyPiePizza
-	//#avengers
-	//http://api.twitter.com/1/trends/daily.json
-	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
-}
-
-function index(request, response){
-	
-	redisClient.lrange("tweets", 0, 100, function(err, docs){
-		var items = [];
-		items = parseTweets(err, docs);
 		
-		//TODO: use Jquery's $.map
-		//var mappedTweets = $.map(docs, function(doc){return new chirpHelper.chirp(item);});
 	}
 	
 	return items;
@@ -98,19 +79,21 @@ function consumeTweets(request, response){
 
 function index(request, response){
 	
-	redisClient.lrange("tweets", 0, 100, function(err, docs){
-		var items = [];
+	var items = [];
+	if(request.loggedIn === true) {
+		redisClient.lrange("tweets", 0, 100, function(err, docs){
 		items = parseTweets(err, docs);
-		
-		response.render("index", {
+		});
+	}
+
+	response.render("index", {
 		locals: 
 			{
-				'title': "The Tweets", 
+				'title': "The Tweets - loggined in: " + request.loggedIn, 
 				'header': "Welcome to Les Tweets!",
-				'tweets': (typeof items != "undefined" && items != null && items.length > 0) ? items : null
+				'tweets': (items != null && items.length > 0) ? items : null
 			}
 		});
-	});
 }
 
 exports.newTweet = newTweet;

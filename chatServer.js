@@ -5,6 +5,15 @@ var express = require("express");
 var passport = require("passport");
 var passportTwitterStrategy = require("passport-twitter").Strategy;
 
+/*
+ * TODO:  move functions into respective modules
+ * TODO: consume tweets from given handle
+ * TODO: search twitter by handle
+ * TODO: store tweets in Mongo
+ * TODO: store searches in Mongo
+ * TODO: integrate auth with facebook, google+, linkedin
+ */
+
 //Passport serialize user
 passport.serializeUser(function(user, done){
 	done(null, user);

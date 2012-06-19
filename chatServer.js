@@ -12,6 +12,7 @@ var passportTwitterStrategy = require("passport-twitter").Strategy;
  * TODO: store tweets in Mongo
  * TODO: store searches in Mongo
  * TODO: integrate auth with facebook, google+, linkedin
+ * 
  */
 
 //Passport serialize user

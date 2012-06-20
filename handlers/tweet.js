@@ -45,9 +45,11 @@ function newTweet(request, response){
 
 function getTweets(request, response){
 	
-	redisClient.lrange("tweets", 0, 100, function(err, docs){
-		response.send(parseTweets(err, docs));
-	});
+	//http://api.twitter.com/1/statuses/public_timeline.json
+	//http://search.twitter.com/search.json?q=LuckyPiePizza
+	//avengers
+	//http://api.twitter.com/1/trends/daily.json
+	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
 }
 
 function parseTweets(err, docs)
@@ -66,14 +68,6 @@ function parseTweets(err, docs)
 	}
 	
 	return items;
-}
-
-//TODO: need to implement
-function consumeTweets(request, response){
-	//http://search.twitter.com/search.json?q=LuckyPiePizza
-	//avengers
-	//http://api.twitter.com/1/trends/daily.json
-	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
 }
 
 function RenderTweetsToResponse(request, response, items){

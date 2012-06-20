@@ -9,14 +9,14 @@ module.exports = function(expressServer, passport, tweetHandler){
 	
 	//Handle route to /auth/twitter 
 	expressServer.get("/auth/twitter", 
-	passport.authenticate("twitter"), function(request, response){
-		//is not called since this route is handled by twitter's login page
-	});
+		passport.authenticate("twitter"), function(request, response){
+			//is not called since this route is handled by twitter's login page
+		});
 	
 	expressServer.get("/auth/twitter/callback", 
-	passport.authenticate("twitter", {failureRedirect: "/login"}), function(request, response){
-		response.redirect("/");
-	});	
+		passport.authenticate("twitter", {failureRedirect: "/login"}), function(request, response){
+			response.redirect("/");
+		});	
 	
 	expressServer.get("/logout", function(request, response){
 		request.logout();

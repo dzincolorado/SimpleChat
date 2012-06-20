@@ -13,7 +13,6 @@ function newTweet(request, response){
 			response.send({"status":"nok", "message":"Tweet must be at least 1 character long."});
 			response.end();
 		}
-		
 		loggingHelper.log('tweet:' + request.body.tweet);
 		var newChirp = new chirpHelper.chirp(request.body.tweet);
 		loggingHelper.log('tweet:' + JSON.stringify(newChirp));
@@ -77,15 +76,7 @@ function consumeTweets(request, response){
 	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
 }
 
-function index(request, response){
-	
-	var items = [];
-	if(request.loggedIn === true) {
-		redisClient.lrange("tweets", 0, 100, function(err, docs){
-		items = parseTweets(err, docs);
-		});
-	}
-
+function RenderTweetsToResponse(request, response, items){
 	response.render("index", {
 		locals: 
 			{
@@ -95,6 +86,20 @@ function index(request, response){
 				'user': request.user
 			}
 		});
+}
+
+function index(request, response){
+	
+	var items = [];
+	if(request.isAuthenticated() === true) {
+		redisClient.lrange("tweets", 0, 100, function(err, docs){
+			items = parseTweets(err, docs);
+			RenderTweetsToResponse(request, response, items);
+		});
+	}
+	else {
+		RenderTweetsToResponse(request, response, items);
+	}
 }
 
 function login(request, response)

@@ -47,6 +47,8 @@ module.exports = function(expressServer, passport, tweetHandler){
 
 //TODO: move into authentication helper
 	function ensureAuthenticated(request, response, next){
+		//return next();
+		//TODO remove above line to get authentication working again
 		if(request.isAuthenticated()) {return next();}
 		response.redirect("/login");
 	}

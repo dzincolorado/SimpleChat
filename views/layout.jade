@@ -6,20 +6,22 @@ head
 	link(rel='stylesheet', href='/styles/bootstrap-responsive.css')
 	link(rel='stylesheet', href='/styles/bootstrap-override.css')
 
-	script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-alert.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-button.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-carousel.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-collapse.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-dropdown.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-modal.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-popover.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-scrollspy.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-tab.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-tooltip.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-transition.js')
-	script(type='text/javascript', src='/assets/js/bootstrap-typeahead.js')
 body
 	div(class='span6')
 		h1 #{header}
 		block content
+block footer
+	script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+	script(type='text/javascript', src='/js/bootstrap-alert.js')
+	script(type='text/javascript', src='/js/bootstrap-button.js')
+	script(type='text/javascript', src='/js/bootstrap-carousel.js')
+	script(type='text/javascript', src='/js/bootstrap-collapse.js')
+	script(type='text/javascript', src='/js/bootstrap-dropdown.js')
+	script(type='text/javascript', src='/js/bootstrap-modal.js')
+	
+	script(type='text/javascript', src='/js/bootstrap-scrollspy.js')
+	script(type='text/javascript', src='/js/bootstrap-tab.js')
+	script(type='text/javascript', src='/js/bootstrap-tooltip.js')
+	script(type='text/javascript', src='/js/bootstrap-transition.js')
+	script(type='text/javascript', src='/js/bootstrap-typeahead.js')
+	script(type='text/javascript', src='/js/common/base.js')

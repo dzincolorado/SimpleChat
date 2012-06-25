@@ -1,7 +1,10 @@
 var chirpHelper = require("../helpers/chirp");
 var httpHelper = require("../helpers/http");
+var http = require("http");
 var loggingHelper = require("../helpers/logging");
 var tweetValidator = require("../validators/tweet");
+var twitterClient = http.createClient(80, "api.twitter.com");
+
 var db = require("redis"),
 	redisClient = db.createClient(6379, "127.0.0.1");
 
@@ -40,7 +43,7 @@ function newTweet(request, response){
 	else
 	{
 		response.send({"status":"nok", "message":"No Tweet received. :("});
-	}
+	}e
 }
 
 function getTweets(request, response){
@@ -49,7 +52,30 @@ function getTweets(request, response){
 	//http://search.twitter.com/search.json?q=LuckyPiePizza
 	//avengers
 	//http://api.twitter.com/1/trends/daily.json
-	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza
+	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza W
+	console.log("GetTweets!");
+	
+	var twitterRequest = twitterClient.request("GET", "/1/statuses/public_timeline.json", {"host": "api.twitter.com"});
+	
+	twitterRequest.addListener("response", function(twitterResponse){
+		var body = "";
+		
+		twitterResponse.addListener("data", function(data){
+			body += data; 
+		});
+		
+		twitterResponse.addListener("end", function(end){
+			var tweets = JSON.parse(body);
+			if(tweets.length > 0){
+				//console.log("Response: " + body);
+				response.writeHead(200, {"content-type": "text/plain"});
+				response.write(body);
+				response.end();
+			}
+		});
+	});
+	
+	twitterRequest.end();
 }
 
 function parseTweets(err, docs)

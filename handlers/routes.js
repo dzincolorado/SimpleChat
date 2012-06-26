@@ -5,7 +5,7 @@ module.exports = function(expressServer, passport, tweetHandler){
 	expressServer.post("/send", ensureAuthenticated, function(request, response){
 		tweetHandler.newTweet(request, response);	
 	});
-	expressServer.get("/tweets", ensureAuthenticated, tweetHandler.getTweets);
+	expressServer.get("/tweets", ensureAuthenticated, tweetHandler.getTwitterTimeline);
 	
 	//Handle route to /auth/twitter 
 	expressServer.get("/auth/twitter", 
@@ -47,7 +47,7 @@ module.exports = function(expressServer, passport, tweetHandler){
 
 //TODO: move into authentication helper
 	function ensureAuthenticated(request, response, next){
-		//return next();
+		return next();
 		//TODO remove above line to get authentication working again
 		if(request.isAuthenticated()) {return next();}
 		response.redirect("/login");

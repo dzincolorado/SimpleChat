@@ -5,6 +5,8 @@ var loggingHelper = require("../helpers/logging");
 var tweetValidator = require("../validators/tweet");
 var twitterClient = http.createClient(80, "api.twitter.com");
 
+var mongo = require("mongojs").connect("chatServer");
+
 var db = require("redis"),
 	redisClient = db.createClient(6379, "127.0.0.1");
 
@@ -46,14 +48,14 @@ function newTweet(request, response){
 	}e
 }
 
-function getTweets(request, response){
+function getTwitterTimeline(request, response){
 	
 	//http://api.twitter.com/1/statuses/public_timeline.json
 	//http://search.twitter.com/search.json?q=LuckyPiePizza
 	//avengers
 	//http://api.twitter.com/1/trends/daily.json
 	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza W
-	console.log("GetTweets!");
+	console.log("getTwitterTimeline!");
 	
 	var twitterRequest = twitterClient.request("GET", "/1/statuses/public_timeline.json", {"host": "api.twitter.com"});
 	
@@ -65,8 +67,11 @@ function getTweets(request, response){
 		});
 		
 		twitterResponse.addListener("end", function(end){
-			var tweets = JSON.parse(body);
-			if(tweets.length > 0){
+			var twitterTimeline = JSON.parse(body);
+			if(twitterTimeline.length > 0){
+				var twitterPublicTimelineCollection = mongo.collection("twitterPublicTimeline");
+				twitterPublicTimelineCollection.save(twitterTimeline);
+				
 				//console.log("Response: " + body);
 				response.writeHead(200, {"content-type": "text/plain"});
 				response.write(body);
@@ -135,6 +140,6 @@ function login(request, response)
 }
 
 exports.newTweet = newTweet;
-exports.getTweets = getTweets;
+exports.getTwitterTimeline = getTwitterTimeline;
 exports.index = index;
 exports.login = login;

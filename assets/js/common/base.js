@@ -1,14 +1,17 @@
-function AttachFindByHashHandler(){
-	//$('#parent').on("click", "#child", function() {});
+var twitterTimeline = [];
+
+function AttachPublicTimelineHandler(){
 	$(".controls").on("click", "#btnFindByHash", function(){
 			$.ajax({
 				url:"tweets" ,
 				type: "get",
 				dataType: "json"
 			}).done(function(data){
-					alert(data);
+					//populate ko.observable array
+					twitterTimeline = data;
 			});
 	});
 }
 
-AttachFindByHashHandler();
+AttachPublicTimelineHandler();
+

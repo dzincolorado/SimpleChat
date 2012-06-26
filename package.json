@@ -5,7 +5,8 @@
 		"express": ">= 2.5.10",
 		"passport": ">= 0.0.0",
 		"passport-twitter": ">= 0.0.0",
-		"redis": ">= 0.7.2"
+		"redis": ">= 0.7.2",
+		"mongojs": "0.3.2"
 	},
 	"engines": {
 	    "node": ">= 0.6.14",

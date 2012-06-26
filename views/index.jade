@@ -4,28 +4,41 @@ block content
 	h3 Twitter User Data
 	br
 	//- this is a comment
-	p= 'Currently logged in as ' + user.username 
+	//- p= 'Currently logged in as ' + user.username 
 		span 
 			a(href="/logout") Logout
 	br
 	br
-	form(action='/send', method='POST', class='well')
-		fieldset
-			label Tweet or Hash tag: 
-			div(class="control-group")
-				div(class="controls")
-					div(class="input-append")
-					input(type='text', length='140', name='tweet', class='span3', placeholder='Type something...')
-					input(type='submit', value='Tweet it!', class='btn')
-					input(type='button', value='Find by Hash tag', class='btn btn-inverse', id="btnFindByHash")
-			span(class='help-block') 140 characters or less
-	
-		- if(tweets != null)
-			ul
-				each t in tweets
-					li 
-						span(class="label label-info")= t.content
-							em= ' posted on ' + t.createDate.toLocaleDateString() + ' ' + t.createDate.toLocaleTimeString()
-		- else
-			div(class='alert alert-info') We are tweetless.
-			//- !=partial('partials/chirp', {locals: {tweets: tweets}})
+	div(class="container")
+		form(action='/send', method='POST', class='well')
+			fieldset
+				label Tweet or Hash tag: 
+				div(class="control-group")
+					div(class="controls")
+						div(class="input-append")
+						input(type='text', length='140', name='tweet', class='span3', placeholder='Type something...')
+						input(type='submit', value='Tweet it!', class='btn')
+						input(type='button', value='Show Public Timeline', class='btn btn-inverse', id="btnFindByHash")
+				span(class='help-block') 140 characters or less
+		
+				span(class="label label-success") Local chirps
+				br
+				br
+		
+				- if(tweets != null)
+					ul
+						each t in tweets
+							li 
+								small= t.content
+									em= ' posted on ' + t.createDate.toLocaleDateString() + ' ' + t.createDate.toLocaleTimeString()
+				- else
+					div(class='alert alert-info') We are tweetless.
+					//- !=partial('partials/chirp', {locals: {tweets: tweets}})
+					
+				span(class="label label-success") Twitter results
+				br
+				br
+			
+				ul
+					li results go heer
+		

@@ -1,13 +1,15 @@
 var twitterTimeline = [];
 
 function AttachPublicTimelineHandler(){
-	$(".controls").on("click", "#btnFindByHash", function(){
+	$("#tabs-2").on("click", "#btnGetTimeLine", function(){
+			//alert("test");
 			$.ajax({
 				url:"tweets" ,
 				type: "get",
 				dataType: "json"
 			}).done(function(data){
 					//populate ko.observable array
+					//alert(data.length);
 					twitterTimeline = data;
 			});
 	});

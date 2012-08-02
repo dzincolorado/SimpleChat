@@ -72,7 +72,7 @@ function getTwitterTimeline(request, response){
 				var twitterPublicTimelineCollection = mongo.collection("twitterPublicTimeline");
 				twitterPublicTimelineCollection.save(twitterTimeline);
 				
-				//console.log("Response: " + body);
+				console.log("Receieved Twitter Timeline; length is: " + twitterTimeline.length);
 				response.writeHead(200, {"content-type": "text/plain"});
 				response.write(body);
 				response.end();

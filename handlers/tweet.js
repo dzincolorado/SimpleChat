@@ -45,7 +45,7 @@ function newTweet(request, response){
 	else
 	{
 		response.send({"status":"nok", "message":"No Tweet received. :("});
-	}e
+	}
 }
 
 function getTwitterTimeline(request, response){

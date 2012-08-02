@@ -14,6 +14,7 @@ var passportTwitterStrategy = require("passport-twitter").Strategy;
  * TODO: integrate auth with facebook, google+, linkedin
  * TODO: integrate with OpenStreetMaps
  * TODO: setup chatServer as cluster
+ * TODO: use RabbitMQ
  * 
  */
 

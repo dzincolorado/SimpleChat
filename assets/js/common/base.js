@@ -15,3 +15,6 @@ function AttachPublicTimelineHandler(){
 
 AttachPublicTimelineHandler();
 
+$(function(){
+	$("#tabs").tabs();
+});

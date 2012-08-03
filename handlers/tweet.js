@@ -74,8 +74,19 @@ function getTwitterTimeline(request, response){
 				
 				console.log("Receieved Twitter Timeline; length is: " + twitterTimeline.length);
 				response.writeHead(200, {"content-type": "text/plain"});
-				response.write(body);
-				response.end();
+				
+				//TODO: select from db with projection
+				//db.twitterPublicTimeline.find({}, {_id:1, "user.name": 2, "user.description":3, "user.profile_background_image_url":4, created_at:5})
+				body = "";
+				twitterPublicTimelineCollection.find(
+					{}, {_id:1, "user.name": 2, "user.description":3, "user.profile_background_image_url":4, created_at:5}, function(err, docs){
+						if(!docs){
+							response.end();
+						}
+						
+						response.write(JSON.stringify(docs));
+						response.end();
+					});
 			}
 		});
 	});

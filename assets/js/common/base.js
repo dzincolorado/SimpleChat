@@ -9,8 +9,11 @@ function AttachPublicTimelineHandler(){
 				dataType: "json"
 			}).done(function(data){
 					//populate ko.observable array
-					//alert(data.length);
+					//alert(data);
 					twitterTimeline = data;
+			})
+			.fail(function(jqXHR, textStatus){
+				alert(textStatus);
 			});
 	});
 }

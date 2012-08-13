@@ -39,10 +39,14 @@ block content
 							div(class='alert alert-info') We are tweetless.
 							//- !=partial('partials/chirp', {locals: {tweets: tweets}})
 					div(id="tabs-2")
-						input(type='button', value='Show Public Timeline', class='btn btn-inverse', id="btnGetTimeLine")
-						br
-						br
-						span(data-bind="text: timelinePosts().count") items
-						ul(data-bind="foreach: timelinePosts")
-							li(data-bind="text: userName")
+						div(class="pageButton")
+							input(type='button', value='Show Public Timeline', class='btn btn-inverse', id="btnGetTimeLine")
+						div(data-bind="text: timelinePosts().length + ' timeline items'", class="pageTotal" )
+						
+						//-  Need paging
+						ol(data-bind="foreach: timelinePosts", class="ui-selectable", id="wrpTimelines")
+							li(class="ui-widget-content")
+								div(data-bind="text: userName")
+								div(data-bind="text: userDescription")
+								div(data-bind="text: createdOn")
 		

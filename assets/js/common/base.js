@@ -36,18 +36,20 @@ function getPublicTimeline(requestType){
 	});
 }
 
-function AttachPublicTimelineHandler(){
-	$("#tabs-2").on("click", "#btnGetTimeLine", function(){
-			getPublicTimeline("new");
-	});
-}
 
 var model = new TimelinePostViewModel();
 //document ready event handler
 $(document).ready(function(){
 	
-	//attach button handler
-	AttachPublicTimelineHandler();
+	//attach click handler
+	$("#tabs-2").on("click", "#btnGetTimeLine", function(){
+			getPublicTimeline("new");
+	});
+	
+	//configure selectable()
+	$(function() {
+		$( "#wrpTimelines" ).selectable();
+	});
 
 	//configure jquery tabs
 	$(function(){
@@ -58,7 +60,6 @@ $(document).ready(function(){
 	$("#tabs").bind("tabsselect", function(event, ui){
 		//show timeline when tab is shown
 		if(ui.panel.id == "tabs-2"){
-			alert("showed tabs");
 			getPublicTimeline("");	
 		}
 	});

@@ -1,0 +1,7 @@
+.ui-selectable .ui-selecting { background: #FECA40; }
+.ui-selectable .ui-selected { background: #F39814; color: white; }
+.ui-selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; clear:both;padding-top:10px}
+.ui-selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; }
+
+.pageTotal{width=40px;float:right}
+.pageButton{float:left}

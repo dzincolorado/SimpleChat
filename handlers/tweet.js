@@ -51,7 +51,7 @@ function newTweet(request, response){
 function getTwitterTimeline(request, response){
 	
 	
-	var requestType = "";//request.params.type;
+	var requestType = request.params.type;
 	
 	console.log("getTwitterTimeline! with param: " + requestType);
 	
@@ -84,7 +84,15 @@ function getTwitterTimeline(request, response){
 	{
 		getCachedTwitterTimeline(response);
 	}
-	
+}
+
+//TODO: need to get colllection count for paging
+function getTwitterTimelineCount(response){
+	var col = mongo.collection("twitterPublicTimeline");
+	col.count(function(countValue){
+		response.write(countValue);
+		response.end();
+	});
 }
 
 function getCachedTwitterTimeline(response, twitterPublicTimelineCollection){
@@ -95,8 +103,9 @@ function getCachedTwitterTimeline(response, twitterPublicTimelineCollection){
 	}
 	
 	//response.writeHead(200, {"content-type": "text/plain"});
+	//TODO: fix created_at data type, sorting not working
 	console.log("hitting mongo");
-	col.find({}, {_id:1, "user.name": 2, "user.description":3, "user.profile_background_image_url":4, created_at:5}, 
+	col.find({}, {_id:1, "user.name": 2, "user.description":3, "user.profile_background_image_url":4, created_at:5}).sort({created_at: -1}, 
 		function(err, docs){
 			if(!docs){
 				response.end();

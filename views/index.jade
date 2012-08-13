@@ -42,6 +42,7 @@ block content
 						input(type='button', value='Show Public Timeline', class='btn btn-inverse', id="btnGetTimeLine")
 						br
 						br
-						ul(data-bind="foreach: timeline")
+						span(data-bind="text: timelinePosts().count") items
+						ul(data-bind="foreach: timelinePosts")
 							li(data-bind="text: userName")
 		

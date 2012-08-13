@@ -5,7 +5,8 @@ module.exports = function(expressServer, passport, tweetHandler){
 	expressServer.post("/send", ensureAuthenticated, function(request, response){
 		tweetHandler.newTweet(request, response);	
 	});
-	expressServer.get("/tweets", ensureAuthenticated, tweetHandler.getTwitterTimeline);
+	
+	expressServer.get("/tweets/:type?", ensureAuthenticated, tweetHandler.getTwitterTimeline);
 	
 	//Handle route to /auth/twitter 
 	expressServer.get("/auth/twitter", 

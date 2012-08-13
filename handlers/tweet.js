@@ -50,48 +50,62 @@ function newTweet(request, response){
 
 function getTwitterTimeline(request, response){
 	
-	//http://api.twitter.com/1/statuses/public_timeline.json
-	//http://search.twitter.com/search.json?q=LuckyPiePizza
-	//avengers
-	//http://api.twitter.com/1/trends/daily.json
-	//http://api.twitter.com/1/statuses/user_timeline.json?screen_name=LuckyPiePizza W
-	console.log("getTwitterTimeline!");
 	
-	var twitterRequest = twitterClient.request("GET", "/1/statuses/public_timeline.json", {"host": "api.twitter.com"});
+	var requestType = "";//request.params.type;
 	
-	twitterRequest.addListener("response", function(twitterResponse){
-		var body = "";
+	console.log("getTwitterTimeline! with param: " + requestType);
+	
+	if(requestType == "new"){
+		var twitterRequest = twitterClient.request("GET", "/1/statuses/public_timeline.json", {"host": "api.twitter.com"});
 		
-		twitterResponse.addListener("data", function(data){
-			body += data; 
+		twitterRequest.addListener("response", function(twitterResponse){
+			var body = "";
+			
+			twitterResponse.addListener("data", function(data){
+				body += data; 
+			});
+			
+			twitterResponse.addListener("end", function(end){
+				var twitterTimeline = JSON.parse(body);
+				if(twitterTimeline.length > 0){
+					var twitterPublicTimelineCollection = mongo.collection("twitterPublicTimeline");
+					twitterPublicTimelineCollection.save(twitterTimeline);
+					
+					console.log("Receieved Twitter Timeline; length is: " + twitterTimeline.length);
+					
+					getCachedTwitterTimeline(response, twitterPublicTimelineCollection);
+				}
+			});
 		});
 		
-		twitterResponse.addListener("end", function(end){
-			var twitterTimeline = JSON.parse(body);
-			if(twitterTimeline.length > 0){
-				var twitterPublicTimelineCollection = mongo.collection("twitterPublicTimeline");
-				twitterPublicTimelineCollection.save(twitterTimeline);
-				
-				console.log("Receieved Twitter Timeline; length is: " + twitterTimeline.length);
-				response.writeHead(200, {"content-type": "text/plain"});
-				
-				//TODO: select from db with projection
-				//db.twitterPublicTimeline.find({}, {_id:1, "user.name": 2, "user.description":3, "user.profile_background_image_url":4, created_at:5})
-				body = "";
-				twitterPublicTimelineCollection.find(
-					{}, {_id:1, "user.name": 2, "user.description":3, "user.profile_background_image_url":4, created_at:5}, function(err, docs){
-						if(!docs){
-							response.end();
-						}
-						
-						response.write(JSON.stringify(docs));
-						response.end();
-					});
+		twitterRequest.end();
+	}
+	else
+	{
+		getCachedTwitterTimeline(response);
+	}
+	
+}
+
+function getCachedTwitterTimeline(response, twitterPublicTimelineCollection){
+	var col = twitterPublicTimelineCollection;
+	
+	if(typeof(col) == "undefined"){
+		col = mongo.collection("twitterPublicTimeline");
+	}
+	
+	//response.writeHead(200, {"content-type": "text/plain"});
+	console.log("hitting mongo");
+	col.find({}, {_id:1, "user.name": 2, "user.description":3, "user.profile_background_image_url":4, created_at:5}, 
+		function(err, docs){
+			if(!docs){
+				response.end();
 			}
+			
+			console.log("doc count: " + docs.length);
+			response.write(JSON.stringify(docs));
+			response.end();
 		});
-	});
-	
-	twitterRequest.end();
 }
 
 function parseTweets(err, docs)
